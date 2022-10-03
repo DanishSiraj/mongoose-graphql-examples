@@ -1,5 +1,4 @@
-const {model, Schema} = require('mongoose');
-// const {connections} = require("../utils/connections.js");
+const {model, Schema,Types} = require('mongoose');
 
 const postSchema = new Schema(
   {
@@ -17,9 +16,9 @@ const postSchema = new Schema(
       enum: ['CREATED', 'DRAFT', 'PUBLISHED'],
       required: true,
     },
-    author_id: {
-      type: String,
-      required: true,
+    creator: {
+      type: Types.ObjectId,
+      ref:"user"
     },
   },
   {
@@ -33,18 +32,6 @@ const postSchema = new Schema(
   }
 );
 
-postSchema.virtual('author', {
-  ref: 'user',
-  foreignField: '_id',
-  localField: 'author_id',
-  justOne: true,
-});
-
-postSchema.virtual('comments', {
-  ref: 'comment',
-  foreignField: 'post_id',
-  localField: '_id',
-});
 
 const postModel = model('post', postSchema);
 module.exports = postModel;

@@ -1,16 +1,22 @@
 const {model, Schema} = require('mongoose');
 
-const commentSchema = new Schema(
+const postSchema = new Schema(
   {
-    comment: {
+    title: {
       type: String,
       required: true,
     },
-    post_id: {
+
+    description: {
       type: String,
+    },
+
+    status: {
+      type: String,
+      enum: ['CREATED', 'DRAFT', 'PUBLISHED'],
       required: true,
     },
-    creator_id: {
+    author_id: {
       type: String,
       required: true,
     },
@@ -26,20 +32,12 @@ const commentSchema = new Schema(
   }
 );
 
-commentSchema.virtual('creator', {
+postSchema.virtual('author', {
   ref: 'user',
   foreignField: '_id',
-  localField: 'creator_id',
+  localField: 'author_id',
   justOne: true,
 });
 
-commentSchema.virtual('post', {
-  ref: 'post',
-  foreignField: '_id',
-  localField: 'post_id',
-  justOne: true,
-});
-
-const commentModel = model('comment', commentSchema);
-
-module.exports = commentModel;
+const postModel = model('post', postSchema);
+module.exports = postModel;

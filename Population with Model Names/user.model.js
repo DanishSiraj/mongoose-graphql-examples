@@ -1,14 +1,26 @@
-const {model, Schema} = require('mongoose');
+const {model, Schema, Types} = require('mongoose');
+
 
 const userSchema = new Schema(
   {
     name: {
       type: String,
     },
+    username: {
+    type: String,
+    required: true,
+    indexed: true
+    },
     isActive: {
       type: Boolean,
       default: true,
-    },
+    }
+    ,
+    posts:[{
+    type: Types.ObjectId,
+    ref: "post",
+    }]
+    
   },
   {
     timestamps: true,
@@ -20,18 +32,6 @@ const userSchema = new Schema(
     },
   }
 );
-
-userSchema.virtual('posts', {
-  ref: 'post',
-  foreignField: 'author_id',
-  localField: '_id',
-});
-
-userSchema.virtual('comments', {
-  ref: 'comment',
-  foreignField: 'creator_id',
-  localField: '_id',
-});
 
 const userModel = model('user', userSchema);
 module.exports = userModel;
